@@ -24,6 +24,7 @@
         background-color: floralwhite;
         border: 1px solid black;
         text-align: center;
+        cursor: pointer;
       }
       .valgt {
         background-color: blue;
@@ -42,6 +43,7 @@
         display: none;
         overflow: scroll;
       }
+
       #popup article {
         width: 80vw;
         display: flex;
@@ -154,6 +156,7 @@
             data.appendChild(klon);
           }
         });
+
         function visDetaljer(ret) {
           console.log(ret);
           popup.style.display = "block";
@@ -167,6 +170,9 @@
           popup.querySelector(".popup_region").textContent =
             ret.oprindelsesregion;
         }
+        document
+          .querySelector("#luk")
+          .addEventListener("click", () => (popup.style.display = "none"));
       }
     </script>
   </body>
