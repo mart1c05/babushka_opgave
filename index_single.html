@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button></button>
+    <article class="menu">
+      <img src="" alt="" />
+      <h2></h2>
+      <p class="beskrivelse"></p>
+      <p class="pris"></p>
+    </article>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
+
+      const url = `https://babushka-dd8a.restdb.io/rest/menu/${id}`;
+      const options = {
+        headers: { "x-apikey": "600ec2fb1346a1524ff12de4" },
+      };
+      console.log("ID", id);
+      document.addEventListener("DOMContentLoaded", hentData);
+      let retter;
+
+      async function hentData() {
+        console.log("hentdata");
+        const resultat = await fetch(url, options);
+
+        retter = await resultat.json();
+        console.log("Retter", retter);
+        vis(retter);
+      }
+      function vis(retter) {
+        document.querySelector("h2").textContent = retter.navn;
+        document.querySelector("img").src =
+          "medium/" + retter.billednavn + "-md.jpg";
+        document.querySelector(".beskrivelse").textContent =
+          retter.kortbeskrivelse;
+        document.querySelector(".pris").textContent =
+          "Pris: " + retter.pris + ",-";
+        document
+          .querySelector("button")
+          .addEventListener("click", tilbageTilMenu);
+      }
+      function tilbageTilMenu() {
+        history.back();
+      }
+    </script>
+  </body>
+</html>
