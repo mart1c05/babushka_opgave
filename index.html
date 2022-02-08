@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="da">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bistro Babushka</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      img {
+        width: 100%;
+        padding: 10%;
+      }
+      .data_menu {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 30px;
+      }
+
+      article {
+        background-color: floralwhite;
+        border: 1px solid black;
+        text-align: center;
+      }
+      .valgt {
+        background-color: blue;
+      }
+      nav {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Alle</h1>
+      <nav>
+        <button data-kategori="alle" class="valgt">Alle</button>
+        <button data-kategori="forretter">Forretter</button>
+        <button data-kategori="hovedretter">Hovedretter</button>
+        <button data-kategori="desserter">Desserter</button>
+        <button data-kategori="sideorders">Sideorders</button>
+        <button data-kategori="drikkevarer">Drikkevarer</button>
+      </nav>
+    </header>
+    <main>
+      <section class="data_menu"></section>
+      <template>
+        <article class="menu">
+          <img src="" alt="" />
+          <h2></h2>
+          <p class="beskrivelse"></p>
+          <p class="pris"></p>
+        </article>
+      </template>
+    </main>
+    <footer></footer>
+    <script>
+      const header = document.querySelector("header h1");
+      const url = "https://babushka-dd8a.restdb.io/rest/menu";
+      const options = {
+        headers: { "x-apikey": "600ec2fb1346a1524ff12de4" },
+      };
+      document.addEventListener("DOMContentLoaded", start);
+      let retter;
+      let filter = "alle";
+      function start() {
+        const filterKnapper = document.querySelectorAll("nav button");
+        filterKnapper.forEach((knap) =>
+          knap.addEventListener("click", filtrerRetter)
+        );
+        //loadJSON();
+      }
+      function filtrerRetter() {
+        console.log("knap");
+        filter = this.dataset.kategori;
+        document.querySelector(".valgt").classList.remove("valgt");
+        this.classList.add("valgt");
+        vis(retter);
+        header.textContent = this.textContent;
+      }
+
+      async function hentData() {
+        console.log("hentdata");
+        const resultat = await fetch(url, options);
+
+        retter = await resultat.json();
+        console.log("Retter", retter);
+        vis(retter);
+      }
+      hentData();
+
+      function vis(json) {
+        console.log(json);
+      }
+
+      function vis(retter) {
+        const data = document.querySelector(".data_menu");
+        const menuTemplate = document.querySelector("template");
+        data.textContent = "";
+        retter.forEach((ret) => {
+          console.log("Kategori", ret.kategori);
+          if (filter == ret.kategori || filter == "alle") {
+            const klon = menuTemplate.cloneNode(true).content;
+            klon.querySelector("h2").textContent = ret.navn;
+            klon.querySelector("img").src =
+              "medium/" + ret.billednavn + "-md.jpg";
+            klon.querySelector(".beskrivelse").textContent =
+              ret.kortbeskrivelse;
+            klon.querySelector(".pris").textContent =
+              "Pris: " + ret.pris + ",-";
+            data.appendChild(klon);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
